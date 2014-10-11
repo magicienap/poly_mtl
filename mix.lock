@@ -1,0 +1,5 @@
+%{"hackney": {:package, "0.14.1"},
+  "httpoison": {:package, "0.4.3"},
+  "idna": {:package, "1.0.1"},
+  "mochiweb": {:git, "git://github.com/mochi/mochiweb.git", "ce37cb2bb17b845a7d8aab7f093b15f6745e28d5", [ref: "HEAD"]},
+  "mochiweb_xpath": {:git, "git://github.com/retnuh/mochiweb_xpath.git", "ccea7319e88281f6274b6fce617278c434bac56f", []}}
