@@ -1,7 +1,7 @@
 defmodule PolyMtl.Api.Horaire.Examens.ExamensFinaux do
   import PolyMtl.Api.Horaire.Examens.Commun
 
-  @uri_horaire_examens_finaux "http://127.0.0.1:8000/horaire_exam_finaux.html"
+  @uri_horaire_examens_finaux "http://www.polymtl.ca/etudes/horaires/horaire_exam_finaux.php"
 
   def obtenir do
     page = obtenir_page(@uri_horaire_examens_finaux)
