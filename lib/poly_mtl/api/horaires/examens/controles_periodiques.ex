@@ -1,5 +1,5 @@
-defmodule PolyMtl.Api.Examens.ControlesPeriodiques do
-  import PolyMtl.Api.Examens.Commun
+defmodule PolyMtl.Api.Horaire.Examens.ControlesPeriodiques do
+  import PolyMtl.Api.Horaire.Examens.Commun
 
   @uri_horaire_controles_periodiques "http://www.polymtl.ca/etudes/horaires/horaire_contr_per.php"
 
@@ -24,7 +24,7 @@ defmodule PolyMtl.Api.Examens.ControlesPeriodiques do
 
     %PolyMtl.Examen{
         sigle:  Enum.at(donnees, 0),
-        groupe: Enum.at(donnees, 1),
+        groupe: String.to_integer(Enum.at(donnees, 1)),
         date:   extraire_date_cp(Enum.at(donnees, 3), Enum.at(donnees, 4)),
         heure:  extraire_heure(Enum.at(donnees, 5)),
         salle:  Enum.at(donnees, 6),
@@ -61,7 +61,8 @@ defmodule PolyMtl.Api.Examens.ControlesPeriodiques do
     fragment = xpath(page, "//div[@id=\"contenu-texte\"]/p")
     [_, date | _] = fragment
     [date] = xpath(date, "//b/text()")
-    [_, jour, mois, annee] = Regex.run(~r/\(mise à jour : (\d{1,2}) (\w+) (\d{4})\)/, date)
+    [_, jour, mois, annee] =
+      Regex.run(~r/\(mise à jour : (\d{1,2}) (\w+) (\d{4})\)/, date)
 
     annee = String.to_integer(annee)
     mois  = extraire_mois(mois)

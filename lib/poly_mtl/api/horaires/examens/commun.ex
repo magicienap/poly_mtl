@@ -1,4 +1,4 @@
-defmodule PolyMtl.Api.Examens.Commun do
+defmodule PolyMtl.Api.Horaire.Examens.Commun do
   def obtenir_page(uri) do
     HTTPoison.start
     %HTTPoison.Response{body: page} = HTTPoison.get uri
@@ -38,7 +38,10 @@ defmodule PolyMtl.Api.Examens.Commun do
   end
 
   def extraire_mois(mois) do
-    tous_mois = ["", "janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+    tous_mois = ["", "janvier", "février", "mars", "avril", "mai", "juin",
+                 "juillet", "août", "septembre", "octobre", "novembre",
+                 "décembre"]
+    mois = supprimer_espaces(mois)
 
     Enum.find_index(tous_mois, fn (m)-> mois == m end)
   end

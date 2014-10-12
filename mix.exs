@@ -15,7 +15,8 @@ defmodule PolyMtl.Mixfile do
   defp deps do
     [
       { :httpoison, "~> 0.4" },
-      { :mochiweb_xpath, github: "retnuh/mochiweb_xpath" }
+      { :mochiweb_xpath, github: "retnuh/mochiweb_xpath" },
+      { :ux, github: "erlang-unicode/ux" }
     ]
   end
 end
