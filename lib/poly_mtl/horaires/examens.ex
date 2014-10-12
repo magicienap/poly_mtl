@@ -1,6 +1,7 @@
 defmodule PolyMtl.Horaires.Examens do
   def extraire_pour(nom_complet, liste_cours) do
-    extraire_pour(nom_complet, liste_cours, [:controles_periodiques])
+    extraire_pour(nom_complet, liste_cours,
+                  [:controles_periodiques, :examens_finaux])
   end
 
   def extraire_pour(nom_complet, liste_cours, types_examens)
@@ -15,6 +16,8 @@ defmodule PolyMtl.Horaires.Examens do
       case type do
         :controles_periodiques ->
           PolyMtl.Api.Horaire.Examens.ControlesPeriodiques.obtenir
+        :examens_finaux ->
+          PolyMtl.Api.Horaire.Examens.ExamensFinaux.obtenir
       end
 
     {filtrer_examens(liste_examens, nom_complet, liste_cours), date_mise_a_jour}

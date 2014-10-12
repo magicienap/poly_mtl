@@ -19,13 +19,25 @@ defmodule PolyMtl.Api.Horaire.Examens.Commun do
   end
 
   def normaliser_espaces(chaine) do
-    remplacer_espaces(chaine, " ")
+    remplacer_espaces(chaine, " ") |> String.strip
   end
 
   defp remplacer_espaces(chaine, remplacement) do
     String.replace(chaine, ~r/\s+/u, remplacement)
   end
 
+  def nilifier(""),     do: nil
+  def nilifier(chaine), do: chaine
+
+
+  def extraire_donnees(examen) do
+    xpath(examen, "//tr/td/text()")
+      |> Enum.map(&normaliser_espaces/1)
+      |> Enum.map(&nilifier/1)
+  end
+
+  def extraire_groupe("Tous"), do: :tous
+  def extraire_groupe(groupe), do: String.to_integer(groupe)
 
   def extraire_heure(heure) do
     [heures, minutes] =
@@ -41,8 +53,29 @@ defmodule PolyMtl.Api.Horaire.Examens.Commun do
     tous_mois = ["", "janvier", "février", "mars", "avril", "mai", "juin",
                  "juillet", "août", "septembre", "octobre", "novembre",
                  "décembre"]
-    mois = supprimer_espaces(mois)
+    mois = supprimer_espaces(mois) |> String.downcase
 
     Enum.find_index(tous_mois, fn (m)-> mois == m end)
+  end
+
+  def separer_noms(nil), do: nil
+  def separer_noms(noms) do
+    [_, nom_debut, prenom_debut, nom_fin, prenom_fin] =
+        Regex.run(~r/de: ([^,]+), ([^,]+)(?: à |, )([^,]+), ([^,]+)/u, noms)
+    {{nom_debut, prenom_debut}, {nom_fin, prenom_fin}}
+  end
+
+  def extraire_date_mise_a_jour(page) do
+    fragment = xpath(page, "//div[@id=\"contenu-texte\"]/p")
+    [_, date | _] = fragment
+    [date] = xpath(date, "//b/text()")
+    [_, jour, mois, annee] =
+      Regex.run(~r/\(mise à jour : (\d{1,2}) (\w+) (\d{4})\)/, date)
+
+    annee = String.to_integer(annee)
+    mois  = extraire_mois(mois)
+    jour  = String.to_integer(jour)
+
+    {annee, mois, jour}
   end
 end
