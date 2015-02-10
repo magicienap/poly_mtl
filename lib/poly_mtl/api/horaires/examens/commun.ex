@@ -37,13 +37,24 @@ defmodule PolyMtl.Api.Horaire.Examens.Commun do
   end
 
   def extraire_groupe("Tous"), do: :tous
+  def extraire_groupe(nil),    do: :tous
   def extraire_groupe(groupe), do: String.to_integer(groupe)
 
-  def extraire_heure(heure) do
-    [heures, minutes] =
+  def extraire_heure(nil),  do: {nil, nil}
+  def extraire_heure("AM"), do: { 9, 30}
+  def extraire_heure("PM"), do: {13, 30}
+  def extraire_heure("S"),  do: {19,  0}
+  def extraire_heure(heure)  do
+    heure_separee = 
       heure
         |> supprimer_espaces
         |> String.split("h")
+
+    [heures, minutes] =
+      case heure_separee do
+        [_, ""] -> [Enum.at(heure_separee, 0), "0"]
+        _ -> heure_separee
+      end
         |> Enum.map(&String.to_integer/1)
 
     {heures, minutes}
@@ -60,8 +71,13 @@ defmodule PolyMtl.Api.Horaire.Examens.Commun do
 
   def separer_noms(nil), do: nil
   def separer_noms(noms) do
+    # En théorie, ce devrait être Regex.run(~r/[d|D]e:\s*([^,]+),\s*([^,]+)(?: à |, )([^,]+),\s*([^,]+)/u, noms)
+    # Toutefois, les données ne sont pas uniformes
     [_, nom_debut, prenom_debut, nom_fin, prenom_fin] =
-        Regex.run(~r/de: ([^,]+), ([^,]+)(?: à |, )([^,]+), ([^,]+)/u, noms)
+        Regex.run(~r/[d|D]e:\s*([^,]+),\s*([^,]+)(?:\s?à |, )([^,]+),\s*([^,]+)/u, noms) ||
+         # Ces lignes ne devraient pas être présentes, mais les données ne sont pas uniformes!
+        Regex.run(~r/[d|D]e:\s*([^,]+),\s*([^,]+)(?: à |, )([^,]+)\s*([^,]+)/u, noms) ||
+        (Regex.run(~r/[d|D]e:\s*([^,]+),\s*([^,]+) à/u, noms) ++ [nil, nil])
     {{nom_debut, prenom_debut}, {nom_fin, prenom_fin}}
   end
 
@@ -69,8 +85,9 @@ defmodule PolyMtl.Api.Horaire.Examens.Commun do
     fragment = xpath(page, "//div[@id=\"contenu-texte\"]/p")
     [_, date | _] = fragment
     [date] = xpath(date, "//b/text()")
+
     [_, jour, mois, annee] =
-      Regex.run(~r/\(mise à jour : (\d{1,2}) (\w+) (\d{4})\)/, date)
+      Regex.run(~r/\(mise à jour : (\d{1,2})\s* (\w+)\s*(\d{4})\)/u, date)
 
     annee = String.to_integer(annee)
     mois  = extraire_mois(mois)

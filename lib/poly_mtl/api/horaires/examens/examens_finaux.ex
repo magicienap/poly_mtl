@@ -26,22 +26,19 @@ defmodule PolyMtl.Api.Horaire.Examens.ExamensFinaux do
       sigle:  Enum.at(donnees, 0),
       groupe: extraire_groupe(Enum.at(donnees, 1)),
       date:   extraire_date_ef(Enum.at(donnees, 3)),
-      heure:  extraire_heure_ef(Enum.at(donnees, 4)),
+      heure:  extraire_heure(Enum.at(donnees, 4)),
       salle:  Enum.at(donnees, 5),
       noms:   separer_noms(Enum.at(donnees, 6))
     }
   end
 
+  defp extraire_date_ef(nil),   do: {nil, nil, nil}
   defp extraire_date_ef(chaine) do
     {{annee, _, _}, _} = :calendar.local_time
-    [jour, mois] = String.split(chaine, " ")
+    [jour, mois] = String.split(chaine, ~r/( |-)/)
     mois = extraire_mois(mois)
     jour = jour |> String.to_integer
 
     {annee, mois, jour}
   end
-
-  defp extraire_heure_ef("AM"), do: { 9, 30}
-  defp extraire_heure_ef("PM"), do: {13, 30}
-  defp extraire_heure_ef("S"),  do: {19,  0}
 end
