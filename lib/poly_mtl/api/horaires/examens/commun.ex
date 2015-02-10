@@ -1,7 +1,7 @@
 defmodule PolyMtl.Api.Horaire.Examens.Commun do
   def obtenir_page(uri) do
     HTTPoison.start
-    %HTTPoison.Response{body: page} = HTTPoison.get uri
+    %HTTPoison.Response{body: page} = HTTPoison.get! uri
 
     page
       |> :unicode.characters_to_binary(:latin1)

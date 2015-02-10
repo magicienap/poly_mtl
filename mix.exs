@@ -9,12 +9,12 @@ defmodule PolyMtl.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :httpoison]]
   end
 
   defp deps do
     [
-      { :httpoison, "~> 0.4" },
+      { :httpoison, "~> 0.6" },
       { :mochiweb_xpath, github: "retnuh/mochiweb_xpath" },
       { :ux, github: "erlang-unicode/ux" }
     ]

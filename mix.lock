@@ -1,7 +1,8 @@
-%{"hackney": {:hex, :hackney, "0.14.1"},
-  "httpoison": {:hex, :httpoison, "0.4.3"},
-  "idna": {:hex, :idna, "1.0.1"},
+%{"hackney": {:hex, :hackney, "1.0.6"},
+  "httpoison": {:hex, :httpoison, "0.6.0"},
+  "idna": {:hex, :idna, "1.0.2"},
   "metamodule": {:git, "git://github.com/arcusfelis/metamodule.git", "4e3610b64128e16dc7bd3fe6726dfc0faef9f028", [ref: "master"]},
   "mochiweb": {:git, "git://github.com/mochi/mochiweb.git", "ce37cb2bb17b845a7d8aab7f093b15f6745e28d5", [ref: "HEAD"]},
   "mochiweb_xpath": {:git, "git://github.com/retnuh/mochiweb_xpath.git", "ccea7319e88281f6274b6fce617278c434bac56f", []},
+  "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.1"},
   "ux": {:git, "git://github.com/erlang-unicode/ux.git", "0a9403837b137ba804f06bc5c96bf8734834a056", []}}
